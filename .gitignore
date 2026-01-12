@@ -1,0 +1,35 @@
+# Build artifacts
+Debug/
+Release/
+x64/
+*.exe
+*.obj
+*.o
+*.ilk
+*.pdb
+*.ipdb
+*.iobj
+*.lib
+*.dll
+*.exp
+*.sdf
+*.opensdf
+*.opendb
+
+# Visual Studio files
+*.sln
+*.suo
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.user
+*.filters
+*.props
+
+# Binary files
+*.bin
+*.dat
+
+# OS generated
+Thumbs.db
+.DS_Store
