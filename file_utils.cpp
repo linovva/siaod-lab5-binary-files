@@ -5,7 +5,7 @@
 using namespace std;
 using namespace std::filesystem;
 
-// Преобразование текстового файла в двоичный
+// РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° РІ РґРІРѕРёС‡РЅС‹Р№
 void createBinFile(string& textFile, string& binFile) {
     ofstream fbout = openFile<ofstream>(binFile, ios::binary);
     ifstream fin = openFile<ifstream>(textFile);
@@ -19,22 +19,22 @@ void createBinFile(string& textFile, string& binFile) {
     }
     closeFile(fbout);
     closeFile(fin);
-    cout << "Двоичный файл '" << binFile << "' создан." << endl;
+    cout << "Р”РІРѕРёС‡РЅС‹Р№ С„Р°Р№Р» '" << binFile << "' СЃРѕР·РґР°РЅ." << endl;
 }
 
-// Вывод всех записей двоичного файла
+// Р’С‹РІРѕРґ РІСЃРµС… Р·Р°РїРёСЃРµР№ РґРІРѕРёС‡РЅРѕРіРѕ С„Р°Р№Р»Р°
 void outBinFile(string& binFile) {
     ifstream fbin = openFile<ifstream>(binFile, ios::binary);
     ReaderTicket record;
     while (fbin.read((char*)&record, sizeof(ReaderTicket))) {
-        cout << "Билет: " << record.ticketNumber
-            << ", ФИО: " << record.fullName
-            << ", Адрес: " << record.address << endl;
+        cout << "Р‘РёР»РµС‚: " << record.ticketNumber
+            << ", Р¤РРћ: " << record.fullName
+            << ", РђРґСЂРµСЃ: " << record.address << endl;
     }
     closeFile(fbin);
 }
 
-// Сохранение данных двоичного файла в текстовом
+// РЎРѕС…СЂР°РЅРµРЅРёРµ РґР°РЅРЅС‹С… РґРІРѕРёС‡РЅРѕРіРѕ С„Р°Р№Р»Р° РІ С‚РµРєСЃС‚РѕРІРѕРј
 void binToTxt(string& binFile) {
     ifstream fbin = openFile<ifstream>(binFile, ios::binary);
     string textFile = binFile + ".txt";
@@ -48,10 +48,10 @@ void binToTxt(string& binFile) {
     }
     closeFile(fbin);
     closeFile(fout);
-    cout << "Данные сохранены в '" << textFile << "'" << endl;
+    cout << "Р”Р°РЅРЅС‹Рµ СЃРѕС…СЂР°РЅРµРЅС‹ РІ '" << textFile << "'" << endl;
 }
 
-// Получение записи по индексу
+// РџРѕР»СѓС‡РµРЅРёРµ Р·Р°РїРёСЃРё РїРѕ РёРЅРґРµРєСЃСѓ
 ReaderTicket getRecordByIndex(string& binFile, int index) {
     ifstream fin = openFile<ifstream>(binFile, ios::binary);
     fin.seekg(0, ios::end);
@@ -60,7 +60,7 @@ ReaderTicket getRecordByIndex(string& binFile, int index) {
 
     if (index < 0 || index >= recordCount) {
         closeFile(fin);
-        cout << "Запись с индексом " << index << " не существует." << endl;
+        cout << "Р—Р°РїРёСЃСЊ СЃ РёРЅРґРµРєСЃРѕРј " << index << " РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚." << endl;
         ReaderTicket empty;
         empty.ticketNumber = -1;
         return empty;
@@ -73,7 +73,7 @@ ReaderTicket getRecordByIndex(string& binFile, int index) {
     return record;
 }
 
-// Удаление по ключу: замена на последнюю запись
+// РЈРґР°Р»РµРЅРёРµ РїРѕ РєР»СЋС‡Сѓ: Р·Р°РјРµРЅР° РЅР° РїРѕСЃР»РµРґРЅСЋСЋ Р·Р°РїРёСЃСЊ
 void delRecordByKey1(string& binFile, int key) {
     fstream fbio = openFile<fstream>(binFile, ios::binary | ios::in | ios::out);
     fbio.seekg(0, ios::end);
@@ -93,27 +93,27 @@ void delRecordByKey1(string& binFile, int key) {
     }
 
     if (targetIndex == -1) {
-        cout << "Запись с ключом " << key << " не найдена!" << endl;
+        cout << "Р—Р°РїРёСЃСЊ СЃ РєР»СЋС‡РѕРј " << key << " РЅРµ РЅР°Р№РґРµРЅР°!" << endl;
         closeFile(fbio);
         return;
     }
 
-    // Читаем последнюю запись
+    // Р§РёС‚Р°РµРј РїРѕСЃР»РµРґРЅСЋСЋ Р·Р°РїРёСЃСЊ
     fbio.seekg((recordCount - 1) * sizeof(ReaderTicket));
     ReaderTicket lastRecord;
     fbio.read((char*)&lastRecord, sizeof(ReaderTicket));
 
-    // Записываем её на место удаляемой
+    // Р—Р°РїРёСЃС‹РІР°РµРј РµС‘ РЅР° РјРµСЃС‚Рѕ СѓРґР°Р»СЏРµРјРѕР№
     fbio.seekp(targetIndex * sizeof(ReaderTicket));
     fbio.write((char*)&lastRecord, sizeof(ReaderTicket));
 
-    // Обрезаем файл
+    // РћР±СЂРµР·Р°РµРј С„Р°Р№Р»
     resize_file(binFile, (recordCount - 1) * sizeof(ReaderTicket));
     closeFile(fbio);
-    cout << "Запись с ключом " << key << " удалена." << endl;
+    cout << "Р—Р°РїРёСЃСЊ СЃ РєР»СЋС‡РѕРј " << key << " СѓРґР°Р»РµРЅР°." << endl;
 }
 
-// Удаление по ключу: через временный файл
+// РЈРґР°Р»РµРЅРёРµ РїРѕ РєР»СЋС‡Сѓ: С‡РµСЂРµР· РІСЂРµРјРµРЅРЅС‹Р№ С„Р°Р№Р»
 void delRecordByKey2(string& binFile, int key) {
     ifstream fin = openFile<ifstream>(binFile, ios::binary);
     string tempFile = "temp_" + binFile;
@@ -137,15 +137,15 @@ void delRecordByKey2(string& binFile, int key) {
     if (found) {
         remove(binFile.c_str());
         rename(tempFile.c_str(), binFile.c_str());
-        cout << "Запись с ключом " << key << " успешно удалена." << endl;
+        cout << "Р—Р°РїРёСЃСЊ СЃ РєР»СЋС‡РѕРј " << key << " СѓСЃРїРµС€РЅРѕ СѓРґР°Р»РµРЅР°." << endl;
     }
     else {
         remove(tempFile.c_str());
-        cout << "Запись с ключом " << key << " не найдена!" << endl;
+        cout << "Р—Р°РїРёСЃСЊ СЃ РєР»СЋС‡РѕРј " << key << " РЅРµ РЅР°Р№РґРµРЅР°!" << endl;
     }
 }
 
-// Поиск и вывод записи по ключу
+// РџРѕРёСЃРє Рё РІС‹РІРѕРґ Р·Р°РїРёСЃРё РїРѕ РєР»СЋС‡Сѓ
 void displayRecordByKey(string& binFile, int key) {
     ifstream fin = openFile<ifstream>(binFile, ios::binary);
     fin.seekg(0, ios::end);
@@ -158,25 +158,25 @@ void displayRecordByKey(string& binFile, int key) {
     for (int i = 0; i < recordCount; ++i) {
         fin.read((char*)&record, sizeof(ReaderTicket));
         if (record.ticketNumber == key) {
-            cout << "Найдена запись:\n"
-                << "Индекс: " << i << "\n"
-                << "Билет: " << record.ticketNumber << "\n"
-                << "ФИО: " << record.fullName << "\n"
-                << "Адрес: " << record.address << endl;
+            cout << "РќР°Р№РґРµРЅР° Р·Р°РїРёСЃСЊ:\n"
+                << "РРЅРґРµРєСЃ: " << i << "\n"
+                << "Р‘РёР»РµС‚: " << record.ticketNumber << "\n"
+                << "Р¤РРћ: " << record.fullName << "\n"
+                << "РђРґСЂРµСЃ: " << record.address << endl;
             found = true;
             break;
         }
     }
     if (!found) {
-        cout << "Запись с ключом " << key << " не найдена!" << endl;
+        cout << "Р—Р°РїРёСЃСЊ СЃ РєР»СЋС‡РѕРј " << key << " РЅРµ РЅР°Р№РґРµРЅР°!" << endl;
     }
     closeFile(fin);
 }
 
-// Добавление записи в конец
+// Р”РѕР±Р°РІР»РµРЅРёРµ Р·Р°РїРёСЃРё РІ РєРѕРЅРµС†
 void addRecordToBinFile(string& binFile, const ReaderTicket& newRecord) {
     ofstream fout = openFile<ofstream>(binFile, ios::binary | ios::app);
     fout.write((char*)&newRecord, sizeof(ReaderTicket));
     closeFile(fout);
-    cout << "Запись с билетом " << newRecord.ticketNumber << " добавлена." << endl;
+    cout << "Р—Р°РїРёСЃСЊ СЃ Р±РёР»РµС‚РѕРј " << newRecord.ticketNumber << " РґРѕР±Р°РІР»РµРЅР°." << endl;
 }

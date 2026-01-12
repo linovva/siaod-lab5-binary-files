@@ -10,19 +10,19 @@ using namespace std;
 
 const int max_len = 50;
 
-// Структура записи: читательский абонемент
+// РЎС‚СЂСѓРєС‚СѓСЂР° Р·Р°РїРёСЃРё: С‡РёС‚Р°С‚РµР»СЊСЃРєРёР№ Р°Р±РѕРЅРµРјРµРЅС‚
 struct ReaderTicket {
     int ticketNumber;
     char fullName[max_len];
     char address[max_len];
 };
 
-// Функции открытия файла
+// Р¤СѓРЅРєС†РёРё РѕС‚РєСЂС‹С‚РёСЏ С„Р°Р№Р»Р°
 template<typename T>
 inline T openFile(const string& fileName, ios_base::openmode mode = ios_base::openmode()) {
     T file(fileName, mode);
     if (!file.is_open()) {
-        cout << "Не удалось открыть файл: " << fileName << endl;
+        cout << "РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р»: " << fileName << endl;
         exit(1);
     }
     return file;
@@ -31,12 +31,12 @@ inline T openFile(const string& fileName, ios_base::openmode mode = ios_base::op
 template<typename T>
 inline void closeFile(T& file) {
     if (!file.good() && !file.eof()) {
-        cout << "Ошибка при работе с файлом." << endl;
+        cout << "РћС€РёР±РєР° РїСЂРё СЂР°Р±РѕС‚Рµ СЃ С„Р°Р№Р»РѕРј." << endl;
     }
     file.close();
 }
 
-// Объявления функций
+// РћР±СЉСЏРІР»РµРЅРёСЏ С„СѓРЅРєС†РёР№
 void createBinFile(string& textFileName, string& binFileName);
 void outBinFile(string& binFile);
 void binToTxt(string& binFile);

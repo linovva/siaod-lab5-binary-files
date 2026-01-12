@@ -25,6 +25,7 @@ x64/
 *.user
 *.filters
 *.props
+.vs/
 
 # Binary files
 *.bin
